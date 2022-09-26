@@ -5,15 +5,38 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Repositories\BrandRepository;
+use App\Traits\FrequentlyUsedControllerFunctions;
 
 class BrandController extends Controller
 {
+    use FrequentlyUsedControllerFunctions;
+
     /**
      * Brand object instance injection model.
      * 
      * @var App\Models\Brand
      */
     protected $brand;
+
+    /**
+     * Response header options associative array
+     * 
+     * @var array
+     */
+    protected $headerOptions = array(
+        'Content-Type' => 'application/json',
+    );
+
+    /**
+     * Array containing image storage variables.
+     * 
+     */
+    protected $storageVars = array(
+        'input' => 'image',
+        'path'  => 'images/brands',
+        'disk'  => 'public',
+    );
 
     /**
      * BrandController constructor's magic method.
@@ -28,9 +51,25 @@ class BrandController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return response()->json($this->brand->all(), 200, ['Content-Type' => 'application/json']);
+        $filter = $request->get('filter');
+        $attr = $request->get('attr');
+        $attr_models = $request->get('attr_models') ? ('carModels:brand_id,' . $request->get('attr_models')) : 'carModels';
+
+        $brandRepository = new BrandRepository($this->brand);
+
+        if ($filter)
+            $brandRepository->filterRegistersFromModel($filter);
+
+        if ($attr)
+            $brandRepository->selectAttributesFromModel($attr);
+
+        $brandRepository->selectAttributesForRelationalEntity($attr_models);
+
+        $brands = $brandRepository->getModelCollection();
+
+        return response()->json($brands, 200, $this->headerOptions);
     }
 
     /**
@@ -43,14 +82,13 @@ class BrandController extends Controller
     {
         $request->validate($this->brand->rules(), $this->brand->feedback());
 
-        $image_urn = $request->file('image')->store('images', 'public');
+        $image_urn = $this->storeImage($request, $this->storageVars);
 
-        $newBrand = $this->brand->create(array(
-            'name'  => $request->get('name'),
-            'image' => $image_urn,
-        ));
+        $input = array_merge($request->all(), ['image' => $image_urn]);
 
-        return response()->json($newBrand, 201, ['Content-Type' => 'application/json']);
+        $newBrand = $this->brand->create($input);
+
+        return response()->json($newBrand, 201, $this->headerOptions);
     }
 
     /**
@@ -61,19 +99,18 @@ class BrandController extends Controller
      */
     public function show($id)
     {
-        $brand = $this->brand->find($id);
+        $brand = $this->brand->with('carModels')->find($id);
 
-        if ($brand === null)
-            return $this->errorResponse();
-
-        return response()->json($brand, 200, ['Content-Type' => 'application/json']);
+        return ($brand)
+            ? response()->json($brand, 200, $this->headerOptions)
+            : $this->errorResponse();
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  integer  $brand
+     * @param  integer  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -83,27 +120,21 @@ class BrandController extends Controller
         if ($brand === null)
             return $this->errorResponse();
 
-        $rewriteRules = $this->brand->rules($id);
+        $rules = $this->rewriteRules($request, $brand);
 
-        if ($request->method() === 'PATCH') {
-            $rewriteRules = [];
-            foreach (array_keys($request->all()) as $attr)
-                $rewriteRules[$attr] = $this->brand->rules($id)[$attr];
-        }
+        $request->validate($rules, $brand->feedback());
 
-        $request->validate($rewriteRules, $this->brand->feedback());
-
-        if(isset($rewriteRules['image'])) {
+        if ($rules['image'])
             Storage::disk('public')->delete($brand->image);
-            $brand->image = $request->file('image')->store('images', 'public');
-        }
 
-        if(isset($rewriteRules['name']))
-            $brand->name = $request->get('name');
+        $brand->fill($request->all());
+
+        if ($rules['image'])
+            $brand->image = $this->storeImage($request, $this->storageVars);
 
         $brand->save();
 
-        return response()->json($brand, 200, ['Content-Type' => 'application/json']);
+        return response()->json($brand, 200, $this->headerOptions);
     }
 
     /**
@@ -124,33 +155,6 @@ class BrandController extends Controller
         Storage::disk('public')->delete($brand->image);
         $brand->delete();
 
-        return response()->json($deletedBrand, 200, ['Content-Type' => 'application/json']);
+        return response()->json($deletedBrand, 200, $this->headerOptions);
     }
-
-    /**
-     * Return a Response object with httpCode and error message embeed.
-     * 
-     * @param  string  $errorMsg
-     * @param  integer  $httpCode
-     * @return Illuminate\Http\Response
-     */
-    private function errorResponse($errorMsg = 'Resource not found', $httpCode = 404)
-    {
-        return response()
-            ->json(['error' => $errorMsg], $httpCode, ['Content-Type' => 'application/json']);
-    }
-
-    // /**
-    //  * Store an image contained on the request.
-    //  * 
-    //  * @param  Illuminate\Http\Request  $request
-    //  * @param  string  $inputName
-    //  * @param  string  $dirName
-    //  * @param  string  $path
-    //  * @return string|bool
-    //  */
-    // private function storeImage(Request $request, $inputName = 'image', $dirName = 'images', $path = 'public')
-    // {
-    //     return $request->file($inputName)->store($dirName, $path);
-    // }
 }

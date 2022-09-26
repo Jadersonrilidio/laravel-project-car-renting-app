@@ -24,11 +24,39 @@ class CarModel extends Model
     protected $fillable = ['brand_id', 'name', 'image', 'num_doors', 'num_passengers', 'air_bag', 'abs'];
 
     /**
+     * Describe attribute rules.
+     * 
+     * @return array
+     */
+    public function rules()
+    {
+        return array(
+            'brand_id'       => 'exists:brands,id',
+            'name'           => "required|unique:car_models,name,{$this->id}|max:30",
+            'image'          => 'required|file|mimes:png,jpeg,jpg',
+            'num_doors'      => 'required|integer|digits_between:1,8',
+            'num_passengers' => 'required|integer|digits_between:1,99',
+            'air_bag'        => 'required|boolean',
+            'abs'            => 'required|boolean',
+        );
+    }
+
+    /**
+     * Describe rules's feedback messages.
+     * 
+     * @return array
+     */
+    public function feedback()
+    {
+        return array();
+    }
+
+    /**
      * Stablish relationship between table brands.
      */
     public function brand()
     {
-        return $this->hasOne(App\Models\Brand::class, 'brand_id', 'id');
+        return $this->belongsTo('App\Models\Brand', 'brand_id', 'id');
     }
 
     /**
@@ -36,7 +64,6 @@ class CarModel extends Model
      */
     public function cars()
     {
-        return $this->hasMany(App\Models\Car::class, 'car_model_id', 'id');
+        return $this->hasMany('App\Models\Car', 'car_model_id', 'id');
     }
-
 }

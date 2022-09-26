@@ -24,11 +24,36 @@ class Car extends Model
     protected $fillable = ['car_model_id', 'plate', 'available', 'km'];
 
     /**
+     * Describe attribute rules.
+     * 
+     * @return array
+     */
+    public function rules()
+    {
+        return array(
+            'car_model_id' => 'required|exists:car_models,id',
+            'plate'        => "required|unique:cars,plate,{$this->id}|min:10|max:10",
+            'available'    => 'required|bool',
+            'km'           => 'required|integer',
+        );
+    }
+
+    /**
+     * Describe rules's feedback messages.
+     * 
+     * @return array
+     */
+    public function feedback()
+    {
+        return array();
+    }
+
+    /**
      * Stablish relationship between table car_models.
      */
-    public function carModels()
+    public function carModel()
     {
-        return $this->hasOne(App\Models\CarModel::class, 'car_model_id', 'id');
+        return $this->belongsTo('App\Models\CarModel', 'car_model_id', 'id');
     }
 
     /**
@@ -36,6 +61,6 @@ class Car extends Model
      */
     public function rentals()
     {
-        return $this->hasMany(App\Models\Rental::class, 'car_id', 'id');
+        return $this->hasMany('App\Models\Rental', 'car_id', 'id');
     }
 }

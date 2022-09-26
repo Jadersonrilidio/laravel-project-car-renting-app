@@ -5,27 +5,66 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCarRequest;
 use App\Http\Requests\UpdateCarRequest;
 use App\Models\Car;
+use App\Traits\FrequentlyUsedControllerFunctions;
+use Illuminate\Http\Request;
+use App\Repositories\CarRepository;
 
 class CarController extends Controller
 {
+    use FrequentlyUsedControllerFunctions;
+
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * Instance model.
+     * 
+     * @var App\Models\Car
      */
-    public function index()
+    protected $car;
+
+    /**
+     * Response header options associative array
+     * 
+     * @var array
+     */
+    protected $headerOptions = array(
+        'Content-Type' => 'application/json',
+    );
+
+    /**
+     * CarController class constructor.
+     * 
+     * @param  App\Models\Car  $car
+     */
+    public function __construct(Car $car)
     {
-        //
+        $this->car = $car;
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Display a listing of the resource.
      *
+     * @param  Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function index(Request $request)
     {
-        //
+        $filter = $request->get('filter');
+        $attr = $request->get('attr');
+        $attr_rel = $request->get('attr_rel') ? ('carModel:id,'.$request->get('attr_rel')) : 'carModel';
+
+        $carRepository = new CarRepository($this->car);
+
+        if ($filter)
+            $carRepository->filterRegistersFromModel($filter);
+
+        if ($attr)
+            $carRepository->selectAttributesFromModel($attr);
+
+        if (str_contains($attr, 'car_model_id'))
+            $carRepository->selectAttributesForRelationalEntity($attr_rel);
+
+        $cars = $carRepository->getModelCollection();
+
+        return response()->json($cars, 200, $this->headerOptions);
     }
 
     /**
@@ -36,7 +75,11 @@ class CarController extends Controller
      */
     public function store(StoreCarRequest $request)
     {
-        //
+        $request->validate($this->car->rules(), $this->car->feedback());
+
+        $newCar = $this->car->create($request->all());
+
+        return response()->json($newCar, 201, $this->headerOptions);
     }
 
     /**
@@ -47,18 +90,9 @@ class CarController extends Controller
      */
     public function show(Car $car)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Car  $car
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Car $car)
-    {
-        //
+        return ($car === null)
+            ? $this->errorResponse()
+            : response()->json($car, 200, $this->headerOptions);
     }
 
     /**
@@ -70,7 +104,17 @@ class CarController extends Controller
      */
     public function update(UpdateCarRequest $request, Car $car)
     {
-        //
+        if ($car === null)
+            return $this->errorResponse();
+
+        $rules = $this->rewriteRules($request, $car);
+
+        $request->validate($rules, $car->feedback());
+
+        $car->fill($request->all());
+        $car->save();
+
+        return response()->json($car, 200, $this->headerOptions);
     }
 
     /**
@@ -81,6 +125,12 @@ class CarController extends Controller
      */
     public function destroy(Car $car)
     {
-        //
+        if ($car === null)
+            return $this->errorResponse();
+        
+        $deletedCar = $car;
+        $car->delete();
+
+        return response()->json($deletedCar, 200, $this->headerOptions);
     }
 }

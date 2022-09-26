@@ -26,16 +26,13 @@ class Brand extends Model
     /**
      * Describe attribute rules.
      * 
-     * @param  integer  $id
      * @return array
      */
-    public function rules($id = null)
+    public function rules()
     {
-        $uniqueId = isset($id) ? (',name,' . $id) : '';
-
         return array(
-            'name'  => "required|unique:brands{$uniqueId}|max:30",
-            'image' => 'required|max:128|mimes:png,jpeg,jpg',
+            'name'  => "required|unique:brands,name,{$this->id}|max:30",
+            'image' => 'required|file|mimes:png,jpeg,jpg',
         );
     }
 
@@ -60,6 +57,6 @@ class Brand extends Model
      */
     public function carModels()
     {
-        return $this->hasMany(App\Models\CarModel::class, 'brandi_id', 'id');
+        return $this->hasMany('App\Models\CarModel', 'brand_id', 'id');
     }
 }
