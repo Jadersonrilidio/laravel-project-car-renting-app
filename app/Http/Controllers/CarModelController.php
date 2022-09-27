@@ -6,11 +6,13 @@ use App\Models\CarModel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\CarModelRepository;
-use App\Traits\FrequentlyUsedControllerFunctions;
+use App\Http\Controllers\Traits\RewriteModelAttributess;
+use App\Http\Controllers\Traits\StandardStorage;
+use App\Http\Controllers\Traits\ErrorResponses;
 
 class CarModelController extends Controller
 {
-    use FrequentlyUsedControllerFunctions;
+    use RewriteModelAttributess, StandardStorage, ErrorResponses;
 
     /**
      * CarModel instance.

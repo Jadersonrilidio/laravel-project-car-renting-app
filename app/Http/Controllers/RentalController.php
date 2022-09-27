@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRentalRequest;
 use App\Http\Requests\UpdateRentalRequest;
 use App\Models\Rental;
-use App\Traits\FrequentlyUsedControllerFunctions;
 use App\Repositories\RentalRepository;
+use App\Http\Controllers\Traits\RewriteModelAttributess;
+use App\Http\Controllers\Traits\StandardStorage;
+use App\Http\Controllers\Traits\ErrorResponses;
 
 class RentalController extends Controller
 {
-    use FrequentlyUsedControllerFunctions;
+    use RewriteModelAttributess, StandardStorage, ErrorResponses;
 
     /**
      * Rental instance object.

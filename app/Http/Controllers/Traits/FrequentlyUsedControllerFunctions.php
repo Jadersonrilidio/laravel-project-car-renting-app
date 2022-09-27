@@ -1,6 +1,7 @@
 <?php
 
-namespace App\Traits;
+namespace App\Http\Controllers\Traits;
+;
 
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
@@ -9,7 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 |--------------------------------------------------------------------------
 | Helper Controller Functions
 |--------------------------------------------------------------------------
-|
+| //OBS {                                                                         .
+| //OBS     This trait was separated into various according to their scope purpose.
+| //OBS     See at folder "App\Http\Controllers\Traits"                           .
+| //OBS {                                                                         .
 | A collection of private functions for reusable code 
 | inside all sorts of Controller classes.
 |

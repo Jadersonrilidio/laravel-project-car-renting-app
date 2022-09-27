@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCarRequest;
 use App\Http\Requests\UpdateCarRequest;
 use App\Models\Car;
-use App\Traits\FrequentlyUsedControllerFunctions;
 use Illuminate\Http\Request;
 use App\Repositories\CarRepository;
+use App\Http\Controllers\Traits\RewriteModelAttributess;
+use App\Http\Controllers\Traits\StandardStorage;
+use App\Http\Controllers\Traits\ErrorResponses;
 
 class CarController extends Controller
 {
-    use FrequentlyUsedControllerFunctions;
+    use RewriteModelAttributess, StandardStorage, ErrorResponses;
 
     /**
      * Instance model.

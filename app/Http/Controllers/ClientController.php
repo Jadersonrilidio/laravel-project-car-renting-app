@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreClientRequest;
 use App\Http\Requests\UpdateClientRequest;
 use App\Models\Client;
-use App\Traits\FrequentlyUsedControllerFunctions;
 use App\Repositories\ClientRepository;
+use App\Http\Controllers\Traits\RewriteModelAttributess;
+use App\Http\Controllers\Traits\StandardStorage;
+use App\Http\Controllers\Traits\ErrorResponses;
 
 class ClientController extends Controller
 {
-    use FrequentlyUsedControllerFunctions;
+    use RewriteModelAttributess, StandardStorage, ErrorResponses;
 
     /**
      * Client instance object.

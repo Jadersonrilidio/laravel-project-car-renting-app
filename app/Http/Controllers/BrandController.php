@@ -6,11 +6,13 @@ use App\Models\Brand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\BrandRepository;
-use App\Traits\FrequentlyUsedControllerFunctions;
+use App\Http\Controllers\Traits\RewriteModelAttributess;
+use App\Http\Controllers\Traits\StandardStorage;
+use App\Http\Controllers\Traits\ErrorResponses;
 
 class BrandController extends Controller
 {
-    use FrequentlyUsedControllerFunctions;
+    use RewriteModelAttributess, StandardStorage, ErrorResponses;
 
     /**
      * Brand object instance injection model.
