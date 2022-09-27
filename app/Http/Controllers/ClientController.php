@@ -106,7 +106,7 @@ class ClientController extends Controller
 
         $rules = $this->rewriteRules($request, $client);
 
-        $request->validate($rules, $client->feedback);
+        $request->validate($rules, $client->feedback());
 
         $client->fill($request->all());
         $client->save();

@@ -38,14 +38,14 @@ class Rental extends Model
      * @return array
      */
     public function rules()
-    {
+    {   
         return array(
             'client_id'            => 'required|exists:clients,id',
             'car_id'               => 'required|exists:cars,id',
-            'date_withdrawal'      => 'required',
-            'date_return_expected' => 'required',
-            'date_return_realized' => 'required',
-            'daily_rate'           => 'required|float:8,2',
+            'date_withdrawal'      => 'required|date_format:Y-m-d',
+            'date_return_expected' => 'required|date',
+            'date_return_realized' => 'required|date',
+            'daily_rate'           => 'required|numeric',
             'km_withdrawal'        => 'required|integer',
             'km_return'            => 'required|integer'
         );
@@ -64,7 +64,7 @@ class Rental extends Model
     /**
      * Stablish relationship between table clients.
      */
-    protected function client()
+    public function client()
     {
         return $this->belongsTo('App\Models\Client', 'client_id', 'id');
     }
@@ -72,7 +72,7 @@ class Rental extends Model
     /**
      * Stablish relationship between table cars.
      */
-    protected function car()
+    public function car()
     {
         return $this->belongsTo('App\Models\Car', 'car_id', 'id');
     }

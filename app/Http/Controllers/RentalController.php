@@ -47,8 +47,8 @@ class RentalController extends Controller
     {
         $filter = $request->get('filter');
         $attr = $request->get('attr');
-        $attr_car = $request->get('attr_car') ? ('car:car_id,' . $request->get('attr_car')) : 'car';
-        $attr_client = $request->get('attr_client') ? ('client:client_id,' . $request->get('attr_client')) : 'client';
+        $attr_car = $request->get('attr_car') ? ('car:id,'.$request->get('attr_car')) : 'car';
+        $attr_client = $request->get('attr_client') ? ('client:id,'.$request->get('attr_client')) : 'client';
 
         $rentalRepository = new RentalRepository($this->rental);
 
@@ -79,7 +79,16 @@ class RentalController extends Controller
     {
         $request->validate($this->rental->rules(), $this->rental->feedback());
 
-        $newRental = $this->rental->create($request->all());
+        $newRental = $this->rental->create([
+            'client_id'            => $request->get('client_id'),
+            'car_id'               => $request->get('car_id'),
+            'date_withdrawal'      => $request->get('date_withdrawal'),
+            'date_return_expected' => $request->get('date_return_expected'),
+            'date_return_realized' => $request->get('date_return_realized'),
+            'daily_rate'           => $request->get('daily_rate'),
+            'km_withdrawal'        => $request->get('km_withdrawal'),
+            'km_return'            => $request->get('km_return'),
+        ]);
 
         return response()->json($newRental, 201, $this->headerOptions);
     }
@@ -111,7 +120,7 @@ class RentalController extends Controller
 
         $rules = $this->rewriteRules($request, $rental);
 
-        $request->validate($rules, $rental->feedback);
+        $request->validate($rules, $rental->feedback());
 
         $rental->fill($request->all());
         $rental->save();

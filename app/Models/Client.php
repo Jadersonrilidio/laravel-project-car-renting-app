@@ -42,13 +42,17 @@ class Client extends Model
      */
     public function feedback()
     {
-        return array();
+        return array(
+            'name.required' => 'attribute name is required',
+            'name.min'      => 'attribute name must have between 3 and 30 characters',
+            'name.max'      => 'attribute name must have between 3 and 30 characters',
+        );
     }
 
     /**
      * Stablish relationship between table rentals.
      */
-    protected function rentals()
+    public function rentals()
     {
         return $this->hasMany('App\Models\Rental', 'client_id', 'id');
     }
