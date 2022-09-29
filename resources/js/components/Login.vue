@@ -7,6 +7,8 @@
 
                     <div class="card-body">
                         <form method="POST" action="">
+                            
+                            <input type="hidden" name="_token" :value="csrf_token">
 
                             <div class="row mb-3">
                                 <label for="email" class="col-md-4 col-form-label text-md-end">Email Address</label>
@@ -44,9 +46,6 @@
                                 </div>
                             </div>
 
-                            {{ attr1 }}
-                            {{ attr2 }}
-
                             <div class="row mb-0">
                                 <div class="col-md-8 offset-md-4">
                                     <button type="submit" class="btn btn-primary">
@@ -68,6 +67,6 @@
 
 <script>
     export default {
-        props: ["attr1", "attr2"]
+        props: ["csrf_token"]
     }
 </script>

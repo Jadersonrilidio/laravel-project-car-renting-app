@@ -32,7 +32,7 @@ class AuthController extends Controller
     {
         $credentials = request(['email', 'password']);
 
-        $token = auth()->attempt($credentials);
+        $token = auth('api')->attempt($credentials);
 
         return ($token)
             ? $this->respondWithToken($token)
@@ -46,7 +46,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        $user = auth()->user();
+        $user = auth('api')->user();
 
         return response()->json($user);
     }
@@ -58,7 +58,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        auth('api')->logout();
 
         return response()->json(['message' => 'successfully logged out']);
     }
@@ -70,8 +70,7 @@ class AuthController extends Controller
      */
     public function refresh()
     {
-        // $credentials = Auth::refresh();
-        $credentials = auth()->refresh();
+        $credentials = auth('api')->refresh();
 
         return $this->respondWithToken($credentials);
     }
@@ -85,8 +84,7 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
-        // $expiration = Auth::factory()->getTTL() * 60;
-        $expiration = auth()->factory()->getTTL() * 60;
+        $expiration = auth('api')->factory()->getTTL() * 60;
 
         $tokenType = 'bearer';
 
