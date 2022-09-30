@@ -21,3 +21,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+Route::get('/brand', [App\Http\Controllers\BrandController::class, 'web_index'])
+    ->middleware('auth')
+    ->name('web.brand.index');

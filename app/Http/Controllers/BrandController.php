@@ -159,4 +159,13 @@ class BrandController extends Controller
 
         return response()->json($deletedBrand, 200, $this->headerOptions);
     }
+
+    /**
+     * my test method
+     * 
+     */
+    public function web_index(Request $request)
+    {
+        return view('app.brands');
+    }
 }

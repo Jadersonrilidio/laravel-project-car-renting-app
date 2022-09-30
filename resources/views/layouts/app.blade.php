@@ -33,7 +33,25 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
-
+                        @auth
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Clients</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">Rentals</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a id="dropdownMenuVehicles" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    Vehicles
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuVehicles">
+                                    <a class="dropdown-item" href="#">Cars</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Models</a>
+                                    <a class="dropdown-item" href="{{ route('web.brand.index') }}">Brands</a>
+                                </div>
+                            </li>
+                        @endauth
                     </ul>
 
                     <!-- Right Side Of Navbar -->
