@@ -2,6 +2,6 @@
 
 @section('content')
 
-    <brands-component></brands-component>
+    <brands-component current-page="{{ Route::currentRouteName() }}"></brands-component>
 
 @endsection
