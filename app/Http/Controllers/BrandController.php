@@ -105,7 +105,7 @@ class BrandController extends Controller
 
         return ($brand)
             ? response()->json($brand, 200, $this->headerOptions)
-            : $this->errorResponse();
+            : $this->notFound();
     }
 
     /**
@@ -120,7 +120,7 @@ class BrandController extends Controller
         $brand = $this->brand->find($id);
 
         if ($brand === null)
-            return $this->errorResponse();
+            return $this->notFound();
 
         $rules = $this->rewriteRules($request, $brand);
 
@@ -150,7 +150,7 @@ class BrandController extends Controller
         $brand = $this->brand->find($id);
 
         if ($brand === null)
-            return $this->errorResponse();
+            return $this->notFound();
 
         $deletedBrand = $brand;
 

@@ -104,7 +104,7 @@ class RentalController extends Controller
     public function show(Rental $rental)
     {
         return ($rental === null)
-            ? $this->errorResponse()
+            ? $this->notFound()
             : response()->json($rental, 200, $this->headerOptions);
     }
 
@@ -118,7 +118,7 @@ class RentalController extends Controller
     public function update(UpdateRentalRequest $request, Rental $rental)
     {
         if ($rental === null)
-            return $this->errorResponse();
+            return $this->notFound();
 
         $rules = $this->rewriteRules($request, $rental);
 
@@ -139,7 +139,7 @@ class RentalController extends Controller
     public function destroy(Rental $rental)
     {
         if ($rental === null)
-            return $this->errorResponse();
+            return $this->notFound();
 
         $deletedRental = $rental;
         $rental->delete();

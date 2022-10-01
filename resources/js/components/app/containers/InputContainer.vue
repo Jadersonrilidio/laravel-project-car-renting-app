@@ -1,5 +1,5 @@
 <template>
-    <div class="form-group">
+    <div class="" :class="divClasses">
         <label :for="id" class="form-label">{{ title }}</label>
         <slot></slot>
         <div :id="idHelp" class="form-text"> {{ textHelp }} </div>
@@ -9,6 +9,7 @@
 <script>
     export default {
         props: [
+            'divClasses',
             'id',
             'title',
             'idHelp',

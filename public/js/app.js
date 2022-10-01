@@ -5406,7 +5406,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['id', 'title', 'idHelp', 'textHelp']
+  props: ['divClasses', 'id', 'title', 'idHelp', 'textHelp']
 });
 
 /***/ }),
@@ -5567,10 +5567,9 @@ var render = function render() {
       fn: function fn() {
         return [_c("div", {
           staticClass: "row"
-        }, [_c("div", {
-          staticClass: "col mb-3"
         }, [_c("input-container-component", {
           attrs: {
+            "div-classes": "form-group col mb-3",
             title: "ID",
             id: "inputId",
             "id-help": "idHelp",
@@ -5584,10 +5583,9 @@ var render = function render() {
             "aria-describedby": "idHelp",
             placoholder: "ID"
           }
-        })])], 1), _vm._v(" "), _c("div", {
-          staticClass: "col mb-3"
-        }, [_c("input-container-component", {
+        })]), _vm._v(" "), _c("input-container-component", {
           attrs: {
+            "div-classes": "form-group col mb-3",
             title: "Name",
             id: "inputName",
             "id-help": "nameHelp",
@@ -5601,7 +5599,7 @@ var render = function render() {
             "aria-describedby": "nameHelp",
             placoholder: "brand name"
           }
-        })])], 1)])];
+        })])], 1)];
       },
       proxy: true
     }, {
@@ -5615,7 +5613,7 @@ var render = function render() {
           attrs: {
             type: "submit"
           }
-        }, [_vm._v("Search")])];
+        }, [_vm._v("\n                        Search\n                    ")])];
       },
       proxy: true
     }])
@@ -5642,7 +5640,7 @@ var render = function render() {
             "data-bs-toggle": "modal",
             "data-bs-target": "#addBrandModal"
           }
-        }, [_vm._v("Add")])];
+        }, [_vm._v("\n                        Add\n                    ")])];
       },
       proxy: true
     }])
@@ -5654,10 +5652,9 @@ var render = function render() {
     scopedSlots: _vm._u([{
       key: "content",
       fn: function fn() {
-        return [_c("div", {
-          staticClass: "form-group"
-        }, [_c("input-container-component", {
+        return [_c("input-container-component", {
           attrs: {
+            "div-classes": "form-group",
             title: "Brand Name",
             id: "brandName",
             "id-help": "brandHelp",
@@ -5685,10 +5682,9 @@ var render = function render() {
               _vm.brandName = $event.target.value;
             }
           }
-        })])], 1), _vm._v(" "), _c("div", {
-          staticClass: "form-group"
-        }, [_c("input-container-component", {
+        })]), _vm._v(" "), _c("input-container-component", {
           attrs: {
+            "div-classes": "form-group",
             title: "Image",
             id: "brandImage",
             "id-help": "imageHelp",
@@ -5706,19 +5702,21 @@ var render = function render() {
               return _vm.uploadImage($event);
             }
           }
-        })])], 1)];
+        })])];
       },
       proxy: true
     }, {
       key: "footer",
       fn: function fn() {
-        return [_c("button", {
+        return [_c("div", {
+          staticClass: "form-group"
+        }, [_c("button", {
           staticClass: "btn btn-secondary",
           attrs: {
             type: "button",
             "data-bs-dismiss": "modal"
           }
-        }, [_vm._v("Cancel")]), _vm._v(" "), _c("button", {
+        }, [_vm._v("\n                    Cancel\n                ")]), _vm._v(" "), _c("button", {
           staticClass: "btn btn-primary",
           attrs: {
             type: "button"
@@ -5728,7 +5726,7 @@ var render = function render() {
               return _vm.addBrand($event);
             }
           }
-        }, [_vm._v("Add")])];
+        }, [_vm._v("\n                    Add\n                ")])])];
       },
       proxy: true
     }])
@@ -5838,7 +5836,7 @@ var render = function render() {
       _c = _vm._self._c;
 
   return _c("div", {
-    staticClass: "form-group"
+    "class": _vm.divClasses
   }, [_c("label", {
     staticClass: "form-label",
     attrs: {

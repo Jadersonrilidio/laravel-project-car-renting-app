@@ -90,7 +90,7 @@ class ClientController extends Controller
     public function show(Client $client)
     {
         return ($client === null)
-            ? $this->errorResponse()
+            ? $this->notFound()
             : response()->json($client, 200, $this->headerOptions);
     }
 
@@ -104,7 +104,7 @@ class ClientController extends Controller
     public function update(UpdateClientRequest $request, Client $client)
     {
         if ($client === null)
-            return $this->errorResponse();
+            return $this->notFound();
 
         $rules = $this->rewriteRules($request, $client);
 
@@ -125,7 +125,7 @@ class ClientController extends Controller
     public function destroy(Client $client)
     {
         if ($client === null)
-            return $this->errorResponse();
+            return $this->notFound();
 
         $deletedClient = $client;
         $client->delete();

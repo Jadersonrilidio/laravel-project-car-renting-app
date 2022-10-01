@@ -107,7 +107,7 @@ class CarModelController extends Controller
 
         return ($carModel)
             ? response()->json($carModel, 200, $this->headerOptions)
-            : $this->errorResponse();
+            : $this->notFound();
     }
 
     /**
@@ -122,7 +122,7 @@ class CarModelController extends Controller
         $carModel = $this->carModel->find($id);
 
         if ($carModel === null)
-            return $this->errorResponse();
+            return $this->notFound();
 
         $rules = $this->rewriteRules($request, $carModel);
 
@@ -150,7 +150,7 @@ class CarModelController extends Controller
     public function destroy(CarModel $carModel)
     {
         if ($carModel === null)
-            return $this->errorResponse();
+            return $this->notFound();
 
         $deletedCarModel = $carModel;
 
