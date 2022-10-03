@@ -36,8 +36,7 @@
                 <card-component title="Brands List">
 
                     <template v-slot:content>
-                        <table-component>
-                        </table-component>
+                        <table-component :cols="columns" :data="brands"></table-component>
                     </template>
 
                     <template v-slot:footer>
@@ -52,66 +51,137 @@
             </div>
         </div>
 
-        <!-- Start modal addBrand -->
+        <!-- Start modal addBrandModal -->
         <modal-component id="addBrandModal" title="Add New Brand">
+            
+            <template v-slot:alerts>
+                <alert-component :details="details" :title="(details.status == 'success') ? 'Success' : 'Error' " v-if="details.status != null "></alert-component>
+            </template>
 
             <template v-slot:content>
 
-                    <input-container-component div-classes="form-group" title="Brand Name" id="brandName" id-help="brandHelp" text-help="Inform brand name">
-                        <input type="text" class="form-control" id="brandName" aria-describedby="brandHelp" v-model="brandName">
-                    </input-container-component>
+                <input-container-component div-classes="form-group" title="Brand Name" id="name" id-help="brandHelp" text-help="Inform brand name">
+                    <input type="text" class="form-control" id="name" aria-describedby="brandHelp" v-model="name">
+                </input-container-component>
 
-                    <input-container-component div-classes="form-group" title="Image" id="brandImage" id-help="imageHelp" text-help="Upload image  on formats PNG, JPEG or JPG">
-                        <input type="file" class="form-control-file" id="brandImage" aria-describedby="imageHelp" @change="uploadImage($event)">
-                    </input-container-component>
+                <input-container-component div-classes="form-group" title="Image" id="image" id-help="imageHelp" text-help="Upload image on formats PNG, JPEG or JPG">
+                    <input type="file" class="form-control-file" id="image" aria-describedby="imageHelp" @change="uploadImage($event)">
+                </input-container-component>
 
             </template>
 
             <template v-slot:footer>
                 <div class="form-group">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="cancelAddBrand()">
                         Cancel
                     </button>
-                    <button type="button" class="btn btn-primary" @click="addBrand($event)">
+                    <button type="button" class="btn btn-primary" @click="addBrand()">
                         Add
                     </button>
                 </div>
             </template>
 
         </modal-component>
-        <!-- End modal addBrand -->
+        <!-- End modal addBrandModal -->
 
     </div>
 </template>
 
 <script>
     export default {
-        props: ['currentPage'],
+        props: [
+            'currentPage',
+        ],
         data() {
             return {
-                brandName: '',
-                brandImage: [],
+                baseUrl: 'http://localhost:8000/api/v1/brand',
+                name: '',
+                image: [],
+                columns: ['id', 'name', 'image'],
+                brands: [],
+                details: {
+                    status: null,
+                    object: {},
+                    message: '',
+                    errors: [],
+                }
             };
         },
         methods: {
-            uploadImage(event) {
-                this.brandImage = event.target.files;
-            },
-            addBrand(event) {
-                let url = 'http://localhost:8000/api/v1/brand';
-                
-                let configs = {
-                    method: 'POST',
-                    body: new URLSearchParams(
-                        {
-                            'name': this.brandName,
-                            'image': this.brandImage,
-                        }
-                    ),
+            loadBrandsList() {
+                let config = {
+                    headers: {
+                        'Authorization': this.token,
+                        'Accept': 'application/json',
+                    },
                 };
 
-                fetch(url, configs).then(response => response.json())
+                axios.get(this.baseUrl, config)
+                    .then(response => {
+                        this.brands = response.data;
+                        console.log(this.brands);
+                    })
+                    .catch(errors => {
+                        console.log(errors);
+                    });
             },
+            uploadImage(event) {
+                this.image = event.target.files;
+            },
+            addBrand() {
+                let formData = new FormData();
+                formData.append('name', this.name);
+                formData.append('image', this.image[0]);
+
+                let config = {
+                    headers: {
+                        'Authorization': this.token,
+                        'Content-Type': 'multipart/form-data',
+                        'Accept': 'application/json',
+                    },
+                };
+
+                this.details = {
+                    status: null,
+                    object: {},
+                    message: '',
+                    errors: [],
+                };
+
+                axios.post(this.baseUrl, formData, config)
+                    .then(response => {
+                        this.details.status = 'success';
+                        this.details.object = response.data;
+                        this.loadBrandsList();
+                    })
+                    .catch(errors => {
+                        this.details.status = 'danger';
+                        this.details.message = errors.response.data.message;
+                        this.details.errors = errors.response.data.errors;
+                    });
+            },
+            cancelAddBrand() {
+                this.name = '';
+                this.image = [];
+                this.details = {
+                    status: null,
+                    object: {},
+                    message: '',
+                    errors: [],
+                };
+            },
+        },
+        computed: {
+            token() {
+                let token = document.cookie
+                        .split(';')
+                        .find(index => index.includes('token='))
+                        .split('=');
+                return 'bearer ' + token[1];
+            },
+        },
+        mounted() {
+            this.loadBrandsList();
         }
     }
 </script>

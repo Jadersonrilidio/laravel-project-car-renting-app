@@ -10,6 +10,7 @@
                     </div>
 
                     <div class="modal-body">
+                        <slot name="alerts"></slot>
                         <slot name="content"></slot>
                     </div>
                     

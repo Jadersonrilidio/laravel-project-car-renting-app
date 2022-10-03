@@ -2,16 +2,21 @@
     <table class="table table-hover">
         <thead>
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Image</th>
+                <th scope="col" v-for="col, key in cols" :key="key" class="text-upercase">{{ col }}</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <th scope="row">01</th>
-                <td>FIAT</td>
-                <td>none</td>
+            <tr v-for="obj in data" :key="obj.id">
+                <td v-for="value, key in obj" :key="key">
+                    <template v-if="cols.includes(key)">
+                        <span v-if="key == 'image'">
+                            <img :src="'storage/' + value" width="30px">
+                        </span>
+                        <span v-else>
+                            {{ value }}
+                        </span>
+                    </template>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -19,6 +24,9 @@
 
 <script>
     export default {
-        props: []
+        props: [
+            'cols',
+            'data',
+        ],
     }
 </script>

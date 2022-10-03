@@ -23,6 +23,7 @@ Vue.component('login-component', require('./components/auth/Login.vue').default)
 Vue.component('home-component', require('./components/Home.vue').default);
 Vue.component('brands-component', require('./components/app/Brands.vue').default);
 Vue.component('card-component', require('./components/app/containers/Card.vue').default);
+Vue.component('alert-component', require('./components/app/containers/Alert.vue').default);
 Vue.component('table-component', require('./components/app/containers/TableComponent.vue').default);
 Vue.component('breadcrumb-component', require('./components/app/containers/Breadcrumb.vue').default);
 Vue.component('modal-component', require('./components/app/containers/Modal.vue').default);
