@@ -36,7 +36,8 @@
                 <card-component title="Brands List">
 
                     <template v-slot:content>
-                        <table-component :cols="columns" :data="brands"></table-component>
+                        <table-component :cols="columns" :data="brands">
+                        </table-component>
                     </template>
 
                     <template v-slot:footer>
@@ -55,7 +56,8 @@
         <modal-component id="addBrandModal" title="Add New Brand">
             
             <template v-slot:alerts>
-                <alert-component :details="details" :title="(details.status == 'success') ? 'Success' : 'Error' " v-if="details.status != null "></alert-component>
+                <alert-component :details="details" :title="(details.status == 'success') ? 'Success' : 'Error' " v-if="details.status != null ">
+                </alert-component>
             </template>
 
             <template v-slot:content>

@@ -19,15 +19,15 @@ window.Vue = require('vue').default;
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('login-component', require('./components/auth/Login.vue').default);
+Vue.component('login-component', require('./components/Login.vue').default);
 Vue.component('home-component', require('./components/Home.vue').default);
-Vue.component('brands-component', require('./components/app/Brands.vue').default);
-Vue.component('card-component', require('./components/app/containers/Card.vue').default);
-Vue.component('alert-component', require('./components/app/containers/Alert.vue').default);
-Vue.component('table-component', require('./components/app/containers/TableComponent.vue').default);
-Vue.component('breadcrumb-component', require('./components/app/containers/Breadcrumb.vue').default);
-Vue.component('modal-component', require('./components/app/containers/Modal.vue').default);
-Vue.component('input-container-component', require('./components/app/containers/InputContainer.vue').default);
+Vue.component('brands-component', require('./components/Brands.vue').default);
+Vue.component('card-component', require('./components/Card.vue').default);
+Vue.component('alert-component', require('./components/Alert.vue').default);
+Vue.component('table-component', require('./components/Table.vue').default);
+Vue.component('breadcrumb-component', require('./components/Breadcrumb.vue').default);
+Vue.component('modal-component', require('./components/Modal.vue').default);
+Vue.component('input-container-component', require('./components/InputContainer.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
