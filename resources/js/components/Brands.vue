@@ -288,14 +288,8 @@
         methods: {
             loadBrandsList() {
                 let url = this.mountUrl();
-                let config = {
-                    headers: {
-                        'Authorization': this.token,
-                        'Accept': 'application/json',
-                    },
-                };
 
-                axios.get(url, config)
+                axios.get(url)
                     .then(response => {
                         this.brands = response.data;
                     })
@@ -353,9 +347,7 @@
 
                 let config = {
                     headers: {
-                        'Authorization': this.token,
                         'Content-Type': 'multipart/form-data',
-                        'Accept': 'application/json',
                     },
                 };
 
@@ -384,9 +376,7 @@
 
                 let configs = {
                     headers: {
-                        'Authorization': this.token,
                         'Content-Type': 'multipart/form-data',
-                        'Accept': 'application/json',
                     },
                 };
 
@@ -407,16 +397,8 @@
             },
             deleteBrand() {
                 let url = this.baseUrl + '/' + this.$store.state.item.id;
-                console.log(url);
-                let configs = {
-                    headers: {
-                        'Authorization': this.token,
-                        'Content-Type': 'application/json' ,
-                        'Accept': 'application/json',
-                    }
-                };
 
-                axios.delete(url, configs)
+                axios.delete(url)
                     .then(response => {
                         this.$store.state.transaction.status = 'success';
                         this.$store.state.transaction.message = 'Transaction done with success!';
@@ -446,13 +428,6 @@
             },
         },
         computed: {
-            token() {
-                let token = document.cookie
-                        .split(';')
-                        .find(index => index.includes('token='))
-                        .split('=');
-                return 'bearer ' + token[1];
-            },
             title() {
                 return (this.details.status == 'success')
                         ? 'Success'

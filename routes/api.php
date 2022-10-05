@@ -21,12 +21,15 @@ Route::prefix('v1')->group(function () {
         Route::apiResource('car', 'App\Http\Controllers\CarController');
         Route::apiResource('client', 'App\Http\Controllers\ClientController');
         Route::apiResource('rental', 'App\Http\Controllers\RentalController');
+        
+        Route::prefix('auth')->group(function ($router) {
+            Route::post('logout', [App\Http\Controllers\AuthController::class, 'logout']);
+            Route::post('me', [App\Http\Controllers\AuthController::class, 'me']);
+        });
     });
 
-    Route::prefix('auth')->middleware('api')->group(function ($router) {
+    Route::prefix('auth')->group(function ($router) {
         Route::post('login', [App\Http\Controllers\AuthController::class, 'login']);
-        Route::post('logout', [App\Http\Controllers\AuthController::class, 'logout']);
         Route::post('refresh', [App\Http\Controllers\AuthController::class, 'refresh']);
-        Route::post('me', [App\Http\Controllers\AuthController::class, 'me']);
     });
 });
