@@ -6,7 +6,7 @@
                 <breadcrumb-component :current-page="currentPage">
                 </breadcrumb-component>
 
-                <!-- Start brand SEARCH card -->
+                <!-- Start card BRAND_SEARCH -->
                 <card-component title="Search Brand">
 
                     <template v-slot:content>
@@ -30,9 +30,9 @@
                     </template>
 
                 </card-component>
-                <!-- End brand SEARCH card -->
+                <!-- End card BRAND_SEARCH -->
 
-                <!-- Start brand LISTING card -->
+                <!-- Start card BRAND_LISTING -->
                 <card-component title="Brands List">
 
                     <template v-slot:content>
@@ -54,18 +54,18 @@
                     </template>
 
                     <template v-slot:footer>
-                        <!-- Button trigger modal addBrand -->
+                        <!-- Button trigger modal ADD_BRAND_MODAL -->
                         <button type="button" class="btn btn-primary btn-sm" style="float:right " data-bs-toggle="modal" data-bs-target="#addBrandModal">
                             Add
                         </button>
                     </template>
 
                 </card-component>
-                <!-- End brand LISTING card -->
+                <!-- End card BRAND_LISTING -->
             </div>
         </div>
 
-        <!-- Start modal addBrandModal -->
+        <!-- Start modal ADD_BRAND_MODAL -->
         <modal-component id="addBrandModal" title="Add New Brand">
             <template v-slot:alerts>
                 <alert-component :details="details" :title="title" v-if="details.status != null ">
@@ -86,7 +86,7 @@
 
             <template v-slot:footer>
                 <div class="form-group">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="cancelAddBrand()">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="clearAll()">
                         Cancel
                     </button>
                     <button type="button" class="btn btn-primary" @click="addBrand()">
@@ -96,9 +96,9 @@
             </template>
 
         </modal-component>
-        <!-- End modal addBrandModal -->
+        <!-- End modal ADD_BRAND_MODAL -->
 
-        <!-- Start modal viewBrandModal -->
+        <!-- Start modal VIEW_BRAND_MODAL -->
         <modal-component :id="buttons.view.dataTarget" :title="buttons.view.title" v-if="buttons.view">
 
             <template v-slot:content>
@@ -116,7 +116,7 @@
                 </input-container-component>
 
                 <input-container-component classes="form-group" title="Created at">
-                    <input type="text" class="form-control" :value="$store.state.item.created_at" disabled>
+                    <input type="text" class="form-control" :value="$store.state.item.created_at | globalFormatDateTime" disabled>
                 </input-container-component>
                 
             </template>
@@ -133,9 +133,9 @@
             </template>
 
         </modal-component>
-        <!-- End modal viewBrandModal -->
+        <!-- End modal VIEW_BRAND_MODAL -->
 
-        <!-- Start modal editBrandModal -->
+        <!-- Start modal EDIT_BRAND_MODAL -->
         <modal-component :id="buttons.edit.dataTarget" :title="buttons.edit.title" v-if="buttons.edit">
 
             <template v-slot:alerts>
@@ -144,8 +144,7 @@
             </template>
 
             <template v-slot:content>
-                <pre>{{ $store.state.item }}</pre>
-
+                
                 <input-container-component classes="form-group" title="Brand Name" id="updateName" id-help="nameHelp" text-help="Inform brand name">
                     <input type="text" class="form-control" id="updateName" aria-describedby="nameHelp" v-model="$store.state.item.name">
                 </input-container-component>
@@ -158,7 +157,7 @@
 
             <template v-slot:footer>
                 <div class="form-group">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="clearAll()">
                         Close
                     </button>
                     <button type="button" class="btn btn-success" @click="updateBrand()">
@@ -168,9 +167,9 @@
             </template>
 
         </modal-component>
-        <!-- End modal editBrandModal -->
+        <!-- End modal EDIT_BRAND_MODAL -->
 
-        <!-- Start modal deleteBrandModal -->
+        <!-- Start modal DELETE_BRAND_MODAL -->
         <modal-component :id="buttons.delete.dataTarget" :title="buttons.delete.title" v-if="buttons.delete">
             
             <template v-slot:alerts>
@@ -193,7 +192,7 @@
                 </input-container-component>
 
                 <input-container-component classes="form-group" title="Created at">
-                    <input type="text" class="form-control" :value="$store.state.item.created_at" disabled>
+                    <input type="text" class="form-control" :value="$store.state.item.created_at | globalFormatDateTime" disabled>
                 </input-container-component>
 
             </template>
@@ -213,7 +212,7 @@
             </template>
 
         </modal-component>
-        <!-- End modal deleteBrandModal -->
+        <!-- End modal DELETE_BRAND_MODAL -->
 
     </div>
 </template>
@@ -283,7 +282,7 @@
                         dataToggle: 'modal',
                         dataTarget: 'deleteBrandModal'
                     },
-                }
+                },
             };
         },
         methods: {
@@ -304,6 +303,13 @@
                         console.log(errors);
                     });
             },
+            mountUrl() {
+                let filterUrl = (this.paginationUrl && this.filterUrl)
+                        ? '&' + this.filterUrl
+                        : this.filterUrl;
+
+                return this.baseUrl + '?' + this.paginationUrl + filterUrl;
+            },
             pagination(pg) {
                 if (pg.url) {
                     this.paginationUrl = pg.url.split('?')[1];
@@ -319,8 +325,26 @@
                         || (pg.label == '&laquo; Previous' && this.brands.current_page == '1'))
                                 return 'disabled';
             },
+            setCursorStyle(pg) {
+                return this.pageIsDisabled(pg)
+                    ? 'cursor:text'
+                    : 'cursor:pointer';
+            },
             uploadImage(event) {
                 this.image = event.target.files;
+            },
+            clearDetails() {
+                this.details = {
+                    status: null,
+                    object: {},
+                    message: '',
+                    errors: [],
+                };
+            },
+            clearAll() {
+                this.name = '';
+                this.image = [];
+                this.clearDetails();
             },
             addBrand() {
                 let formData = new FormData();
@@ -335,12 +359,7 @@
                     },
                 };
 
-                this.details = {
-                    status: null,
-                    object: {},
-                    message: '',
-                    errors: [],
-                };
+                this.clearDetails();
 
                 axios.post(this.baseUrl, formData, config)
                     .then(response => {
@@ -353,16 +372,6 @@
                         this.details.message = errors.response.data.message;
                         this.details.errors = errors.response.data.errors;
                     });
-            },
-            cancelAddBrand() {
-                this.name = '';
-                this.image = [];
-                this.details = {
-                    status: null,
-                    object: {},
-                    message: '',
-                    errors: [],
-                };
             },
             updateBrand() {
                 let url = this.baseUrl + '/' + this.$store.state.item.id;
@@ -381,12 +390,7 @@
                     },
                 };
 
-                this.details = {
-                    status: null,
-                    object: {},
-                    message: '',
-                    errors: [],
-                };
+                this.clearDetails();
 
                 axios.post(url, formData, configs)
                     .then(response => {
@@ -439,18 +443,6 @@
                 this.filterUrl = filter;
                 this.paginationUrl = 'page=1';
                 this.loadBrandsList();
-            },
-            mountUrl() {
-                let filterUrl = (this.paginationUrl && this.filterUrl)
-                        ? '&' + this.filterUrl
-                        : this.filterUrl;
-
-                return this.baseUrl + '?' + this.paginationUrl + filterUrl;
-            },
-            setCursorStyle(pg) {
-                return this.pageIsDisabled(pg)
-                    ? 'cursor:text'
-                    : 'cursor:pointer';
             },
         },
         computed: {

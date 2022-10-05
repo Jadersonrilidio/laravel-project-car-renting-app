@@ -60,12 +60,15 @@ Vue.component('input-container-component', require('./components/InputContainer.
  */
 
 Vue.filter('globalFormatDateTime', datetime => {
+    if (!Date.parse(datetime))
+        return datetime;
+
     datetime = datetime.split('T');
 
     let date = datetime[0];
     date = date.split('-');
     date = date[1] + '/' + date[2] + '/' + date[0]
-    
+
     let time = datetime[1];
     time = time.split('.')[0];
 
