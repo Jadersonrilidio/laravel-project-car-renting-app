@@ -69,7 +69,7 @@ class BrandController extends Controller
 
         $brandRepository->selectAttributesForRelationalEntity($attr_models);
 
-        $brands = $brandRepository->getModelCollection();
+        $brands = $brandRepository->getPaginatedModelCollection(3);
 
         return response()->json($brands, 200, $this->headerOptions);
     }
@@ -126,12 +126,12 @@ class BrandController extends Controller
 
         $request->validate($rules, $brand->feedback());
 
-        if ($rules['image'])
+        if (isset($rules['image']))
             Storage::disk('public')->delete($brand->image);
 
         $brand->fill($request->all());
 
-        if ($rules['image'])
+        if (isset($rules['image']))
             $brand->image = $this->storeImage($request, $this->storageVars);
 
         $brand->save();

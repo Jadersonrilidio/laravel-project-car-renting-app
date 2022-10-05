@@ -8,6 +8,29 @@ require('./bootstrap');
 
 window.Vue = require('vue').default;
 
+import Vue from 'vue';
+/**
+ * Importing and configuring vuex modules
+ */
+
+import Vuex from 'vuex';
+
+Vue.use(Vuex);
+
+const store = new Vuex.Store(
+    {
+        state: {
+            item: {},
+            transaction: {
+                status: '',
+                message: '',
+                errors: [],
+                object: {},
+            }
+        }
+    }
+);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -25,6 +48,7 @@ Vue.component('brands-component', require('./components/Brands.vue').default);
 Vue.component('card-component', require('./components/Card.vue').default);
 Vue.component('alert-component', require('./components/Alert.vue').default);
 Vue.component('table-component', require('./components/Table.vue').default);
+Vue.component('paginate-component', require('./components/Paginate.vue').default);
 Vue.component('breadcrumb-component', require('./components/Breadcrumb.vue').default);
 Vue.component('modal-component', require('./components/Modal.vue').default);
 Vue.component('input-container-component', require('./components/InputContainer.vue').default);
@@ -35,6 +59,20 @@ Vue.component('input-container-component', require('./components/InputContainer.
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+Vue.filter('globalFormatDateTime', datetime => {
+    datetime = datetime.split('T');
+
+    let date = datetime[0];
+    date = date.split('-');
+    date = date[1] + '/' + date[2] + '/' + date[0]
+    
+    let time = datetime[1];
+    time = time.split('.')[0];
+
+    return date + ' - ' + time;
+})
+
 const app = new Vue({
     el: '#app',
+    store
 });

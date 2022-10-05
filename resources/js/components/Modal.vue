@@ -1,11 +1,11 @@
 <template>
         <!-- Modal -->
-        <div class="modal fade" :id="id" tabindex="-1" aria-labelledby="addBrandModalLabel" aria-hidden="true">
+        <div class="modal fade" :id="id" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     
                     <div class="modal-header">
-                        <h5 class="modal-title" id="addBrandModalLabel">{{ title }}</h5>
+                        <h5 class="modal-title" id="modalLabel">{{ title }}</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 

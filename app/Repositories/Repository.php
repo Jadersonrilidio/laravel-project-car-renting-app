@@ -79,12 +79,23 @@ abstract class Repository
     }
 
     /**
-     * Return the Collection match with the QeuryBuilder of the model.
+     * Return the Collection matcht.
      * 
      * @return Illuminate\Database\Schema\Collection
      */
     public function getModelCollection()
     {
         return $this->model->get();
+    }
+
+    /**
+     * Return the Collection matcht as a paginated object.
+     * 
+     * @param  string|int  $registersPerPage
+     * @return Illuminate\Database\Schema\Collection
+     */
+    public function getPaginatedModelCollection($registersPerPage)
+    {
+        return $this->model->paginate($registersPerPage);
     }
 }

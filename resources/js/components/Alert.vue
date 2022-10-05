@@ -1,5 +1,6 @@
 <template>
-    <div :class="style" role="alert">
+    <div :class="style" role="alert" v-if="details.status">
+
         <strong>{{ title }}: </strong>
         <hr>
 
