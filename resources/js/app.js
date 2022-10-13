@@ -45,13 +45,13 @@ const store = new Vuex.Store(
 Vue.component('login-component', require('./components/Login.vue').default);
 Vue.component('home-component', require('./components/Home.vue').default);
 Vue.component('brands-component', require('./components/Brands.vue').default);
-Vue.component('card-component', require('./components/Card.vue').default);
-Vue.component('alert-component', require('./components/Alert.vue').default);
-Vue.component('table-component', require('./components/Table.vue').default);
-Vue.component('paginate-component', require('./components/Paginate.vue').default);
-Vue.component('breadcrumb-component', require('./components/Breadcrumb.vue').default);
-Vue.component('modal-component', require('./components/Modal.vue').default);
-Vue.component('input-container-component', require('./components/InputContainer.vue').default);
+Vue.component('card-component', require('./components/CardComponent.vue').default);
+Vue.component('alert-component', require('./components/AlertComponent.vue').default);
+Vue.component('table-component', require('./components/TableComponent.vue').default);
+Vue.component('paginate-component', require('./components/PaginateComponent.vue').default);
+Vue.component('breadcrumb-component', require('./components/BreadcrumbComponent.vue').default);
+Vue.component('modal-component', require('./components/ModalComponent.vue').default);
+Vue.component('input-container-component', require('./components/InputContainerComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
